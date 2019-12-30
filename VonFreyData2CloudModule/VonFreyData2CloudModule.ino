@@ -26,7 +26,7 @@ char INSERT_EXPERIMENTOS[] =
 char RETRIVE_SESSION[] = "SELECT MAX(IDexperimento) FROM VonFreyDATA.Experimentos";
 
 char INSERT_MEDICOES[] = 
-"INSERT INTO VonFreyDATA.Medicoes (INSERTTimestamp, Valor, IDExperimento) VALUES (NOW(), '%f','%i')";
+"INSERT INTO VonFreyDATA.Medicoes (INSERTTimestamp, Valor, IDExperimento) VALUES (NOW(), %f, %i)";
 
 char query[256];
 int IDExperimento;
@@ -98,7 +98,7 @@ void setup() {
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
   // Execute the query
-  cur_mem->execute(INSERT_EXPERIMENTOS);
+  cur_mem->execute(RETRIVE_SESSION);
   // Fetch the columns (required) but we don't use them.
   column_names *columns = cur_mem->get_columns();
 
@@ -112,7 +112,7 @@ void setup() {
   // Deleting the cursor also frees up memory used
   delete cur_mem;
   Serial.print("O ID do Experimento = ");
-  Serial.print(IDExperimento);
+  Serial.println(IDExperimento);
 }
 /*
 float UPDATEpressaoFilamento(){
