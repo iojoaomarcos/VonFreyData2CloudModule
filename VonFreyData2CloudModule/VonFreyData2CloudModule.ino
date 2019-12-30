@@ -81,6 +81,7 @@ template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, 
 
   //Apos sua execucao, limpando o cursor para liberar memoria
   delete cur_mem;
+  memset(query, '\0', 256); 
 }
 
 void setup() {
@@ -113,6 +114,8 @@ void setup() {
   delete cur_mem;
   Serial.print("O ID do Experimento = ");
   Serial.println(IDExperimento);
+
+  memset(query, '\0', 256); 
 }
 /*
 float UPDATEpressaoFilamento(){
