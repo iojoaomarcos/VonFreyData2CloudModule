@@ -95,7 +95,7 @@ float UPDATEpressaoFilamento(){
   float valor = 0;
   while (i = 0){
     valor = analogRead(0);
-    if(
+    if(...
   }
   valor = map(valor, 0, 1023, 0, 255);
 }
