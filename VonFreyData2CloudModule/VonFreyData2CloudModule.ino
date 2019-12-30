@@ -11,19 +11,23 @@
  *  Fabio Andrijauskas
  */
 
-//Bibliotecas WIFI
+//Bibliotecas WIFI:
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
-//Bibliotecas e ajustes do MySQL
+//Bibliotecas e ajustes do MySQL:
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
+
 char INSERT_EXPERIMENTOS[] = 
 "INSERT INTO VonFreyDATA.Experimentos (DataSessao, Observacoes) VALUES (CURRENT_DATE(), '%c')";
+char RETRIVE_SESSION[] = "SELECT MAX(IDexperimento) FROM VonFreyDATA.Experimentos";
+
 char INSERT_MEDICOES[] = 
 "INSERT INTO VonFreyDATA.Medicoes (INSERTTimestamp, Valor, IDExperimento) VALUES (NOW(), '%f','%i')";
+
 char query[256];
 int IDExperimento = 0;
 
@@ -88,6 +92,25 @@ void setup() {
 
   //Iniciando nova sessao
   INSERTintoDB(INSERT_EXPERIMENTOS, '\0', '\n');
+  
+  row_values *row = NULL;
+  long head_count = 0;
+  // Initiate the query class instance
+  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
+  // Execute the query
+  cur_mem->execute(INSERT_EXPERIMENTOS);
+  // Fetch the columns (required) but we don't use them.
+  column_names *columns = cur_mem->get_columns();
+
+  // Read the row (we are only expecting the one)
+  do {
+    row = cur_mem->get_next_row();
+    if (row != NULL) {
+      head_count = atol(row->values[0]);
+    }
+  } while (row != NULL);
+  // Deleting the cursor also frees up memory used
+  delete cur_mem;
 }
 /*
 float UPDATEpressaoFilamento(){
@@ -100,7 +123,6 @@ float UPDATEpressaoFilamento(){
   valor = map(valor, 0, 1023, 0, 255);
 }
 */
-
 
 void loop() {
   INSERTintoDB(INSERT_MEDICOES, 10, 5); //////////////////////check for &&&&%%%%%
