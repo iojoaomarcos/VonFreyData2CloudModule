@@ -22,14 +22,14 @@
 #include <MySQL_Cursor.h>
 
 char INSERT_EXPERIMENTOS[] = 
-"INSERT INTO VonFreyDATA.Experimentos (DataSessao, Observacoes) VALUES (CURRENT_DATE(), '%c')";
+"INSERT INTO VonFreyDATA.Experimentos (DataSessao, Observacoes) VALUES (CURRENT_DATE(), '')";
 char RETRIVE_SESSION[] = "SELECT MAX(IDexperimento) FROM VonFreyDATA.Experimentos";
 
 char INSERT_MEDICOES[] = 
 "INSERT INTO VonFreyDATA.Medicoes (INSERTTimestamp, Valor, IDExperimento) VALUES (NOW(), '%f','%i')";
 
 char query[256];
-int IDExperimento = 0;
+int IDExperimento;
 
 /*
  * Apos passar por um transdutor e um conversor AD, a forca aplicada
@@ -67,13 +67,13 @@ void connectDatabase(){
   }
 }
 
-template <typename T> void INSERTintoDB(char querytemplate[], T d1, T d2){
+template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, U d2){
   //Objeto do Prompt do banco de dados
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
 
   //Preenchendo a query com os valores devidos: se a query nao ter um segundo
   // argumento, o coringa "\n" deve ser passado para d2
-  if(d2 = '\n') sprintf(query, querytemplate, d1);
+  if(d1 = '\n') sprintf(query, querytemplate, d1);
   else sprintf(query, querytemplate, d1, d2);
   
   //Executando a query
@@ -84,7 +84,7 @@ template <typename T> void INSERTintoDB(char querytemplate[], T d1, T d2){
 }
 
 void setup() {
-  //Setup da velocidade de escrita na saida serial
+  //Configuração da velocidade de escrita na saida serial
   Serial.begin(115200);
 
   connectNetwork();
@@ -106,11 +106,13 @@ void setup() {
   do {
     row = cur_mem->get_next_row();
     if (row != NULL) {
-      head_count = atol(row->values[0]);
+      IDExperimento = atoi(row->values[0]);
     }
   } while (row != NULL);
   // Deleting the cursor also frees up memory used
   delete cur_mem;
+  Serial.print("O ID do Experimento = ");
+  Serial.print(IDExperimento);
 }
 /*
 float UPDATEpressaoFilamento(){
@@ -125,7 +127,7 @@ float UPDATEpressaoFilamento(){
 */
 
 void loop() {
-  INSERTintoDB(INSERT_MEDICOES, 10, 5); //////////////////////check for &&&&%%%%%
+  INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////////////////////check for &&&&%%%%%
   
   delay(100000);
 }
