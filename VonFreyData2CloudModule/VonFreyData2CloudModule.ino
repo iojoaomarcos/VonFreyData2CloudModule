@@ -38,7 +38,7 @@ int IDExperimento;
  */
 float pressaoFilamento = 0;
 
-//Dados do MySQL Server
+//Dados do SGBD MariaDB
 IPAddress IPsql(157,56,178,227);
 char user[] = "microcontroller";
 char password[] = "8164886752";
@@ -71,9 +71,9 @@ template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, 
   //Objeto do Prompt do banco de dados
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
 
-  //Preenchendo a query com os valores devidos: se a query nao ter um segundo
-  // argumento, o coringa "\n" deve ser passado para d2
-  if(d1 = '\n') sprintf(query, querytemplate, d1);
+  //Preenchendo a query com os valores devidos: se a query nao ter 
+  // argumentos, o coringa "\0" deve ser passado para d1
+  if(d1 = '\0') strcpy(query, INSERT_EXPERIMENTOS);
   else sprintf(query, querytemplate, d1, d2);
   
   //Executando a query
@@ -81,21 +81,20 @@ template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, 
 
   //Apos sua execucao, limpando o cursor para liberar memoria
   delete cur_mem;
-  memset(query, '\0', 256); 
+  memset(query, '\0', sizeof query); 
 }
 
 void setup() {
-  //Configuração da velocidade de escrita na saida serial
+  //Configuração da velocidade de escrita/leitura na saida serial (USB)
   Serial.begin(115200);
 
   connectNetwork();
   connectDatabase();
 
   //Iniciando nova sessao
-  INSERTintoDB(INSERT_EXPERIMENTOS, '\0', '\n');
+  INSERTintoDB(INSERT_EXPERIMENTOS, '\0', '\0');
   
   row_values *row = NULL;
-  long head_count = 0;
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
   // Execute the query
@@ -115,7 +114,7 @@ void setup() {
   Serial.print("O ID do Experimento = ");
   Serial.println(IDExperimento);
 
-  memset(query, '\0', 256); 
+  memset(query, '\0', sizeof query); 
 }
 /*
 float UPDATEpressaoFilamento(){
@@ -123,11 +122,11 @@ float UPDATEpressaoFilamento(){
   float valor = 0;
   while (i = 0){
     valor = analogRead(0);
-    if(...
+    //if(...
   }
   valor = map(valor, 0, 1023, 0, 255);
-}
-*/
+}*/
+
 
 void loop() {
   INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////////////////////check for &&&&%%%%%
