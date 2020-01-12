@@ -36,6 +36,7 @@ int IDExperimento;
  * na pata do roedor se torna digitalizada e salva temporariamente
  * na variavel pressaoFilamento
  */
+float **datacollected;
 float pressaoFilamento = 0;
 
 //Dados do SGBD MariaDB
@@ -58,7 +59,7 @@ void connectNetwork(){
 void connectDatabase(){
   Serial.println("Agora conectando ao banco de dados...");
   if(conn.connect(IPsql, 3306, user, password)){
-    Serial.println("... conexao feita com sucesso");
+    Serial.println("... conexao feita com sucesso.");
   }
   else{
     Serial.println("... nao foi possivel conectar :(");
@@ -79,6 +80,8 @@ template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, 
   //Executando a query
   cur_mem->execute(query);
 
+  Serial.println("Novos dados foram enviados ao MariaDB.");
+  
   //Apos sua execucao, limpando o cursor para liberar memoria
   delete cur_mem;
   memset(query, '\0', sizeof query); 
@@ -115,8 +118,22 @@ void setup() {
   Serial.println(IDExperimento);
 
   memset(query, '\0', sizeof query); 
+
+  //------------------------------\\
+  
+  datacollected = (float**) calloc(1, sizeof(float*));
+  datacollected[0] = (float*) calloc(1, sizeof(float));
 }
-/*
+
+void pushRodent(){
+  
+  datacollected = (float**) realloc(datacollected, sizeof(float*));
+}
+
+void pushPressureMeasurement(){
+  datacollected
+}
+
 float UPDATEpressaoFilamento(){
   int i = 0;
   float valor = 0;
@@ -125,9 +142,9 @@ float UPDATEpressaoFilamento(){
     //if(...
   }
   valor = map(valor, 0, 1023, 0, 255);
-}*/
 
-
+  
+}
 void loop() {
   INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////////////////////check for &&&&%%%%%
   
