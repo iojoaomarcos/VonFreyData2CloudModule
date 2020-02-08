@@ -36,8 +36,8 @@ int IDExperimento;
  * na pata do roedor se torna digitalizada e salva temporariamente
  * na variavel pressaoFilamento
  */
-float **datacollected;
 float pressaoFilamento = 0;
+float datacollected[26][5];
 
 //Dados do SGBD MariaDB
 IPAddress IPsql(157,56,178,227);
@@ -98,55 +98,58 @@ void setup() {
   INSERTintoDB(INSERT_EXPERIMENTOS, '\0', '\0');
   
   row_values *row = NULL;
-  // Initiate the query class instance
+  // Iniciando a query...
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  // Execute the query
   cur_mem->execute(RETRIVE_SESSION);
-  // Fetch the columns (required) but we don't use them.
   column_names *columns = cur_mem->get_columns();
 
-  // Read the row (we are only expecting the one)
+  // Le o resultado e o salva em IDExperimento
   do {
     row = cur_mem->get_next_row();
     if (row != NULL) {
       IDExperimento = atoi(row->values[0]);
     }
   } while (row != NULL);
-  // Deleting the cursor also frees up memory used
+  // Uma vez concluido, se libera a memoria
   delete cur_mem;
   Serial.print("O ID do Experimento = ");
   Serial.println(IDExperimento);
 
+  //Preenche query com NULL
   memset(query, '\0', sizeof query); 
-
-  //------------------------------\\
-  
-  datacollected = (float**) calloc(1, sizeof(float*));
-  datacollected[0] = (float*) calloc(1, sizeof(float));
 }
 
-void pushRodent(){
-  
-  datacollected = (float**) realloc(datacollected, sizeof(float*));
-}
-
-void pushPressureMeasurement(){
-  datacollected
-}
 
 float UPDATEpressaoFilamento(){
-  int i = 0;
-  float valor = 0;
-  while (i = 0){
-    valor = analogRead(0);
-    //if(...
-  }
-  valor = map(valor, 0, 1023, 0, 255);
-
-  
+  while(Serial.available() == 0){ //Aguarda o recebimento do dado
+  }  
+  pressaoFilamento = Serial.parseFloat();
+  return pressaoFilamento;
 }
+
+float collectData(){
+  float last; //valor anterior ao da leitura atual
+  float flagged;
+  bool flinch = 0;
+  do{
+    last = UPDATEpressaoFilamento();
+
+    if(pressaoFilamento > last) flagged = pressaoFilamento;
+    if(last <= pressaoFilamento/2){
+       
+    }
+        
+  }while(flinch != 1);
+
+  return flagged;
+}
+
+
+
+
+
 void loop() {
-  INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////////////////////check for &&&&%%%%%
+  INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////check for &&&&%%%%%
   
   delay(100000);
 }
