@@ -17,6 +17,9 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
+//Display
+#include <LiquidCrystal.h>
+
 //Bibliotecas e ajustes do MySQL:
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
@@ -129,7 +132,7 @@ float UPDATEpressaoFilamento(){
 
 float collectData(){
   float last; //valor anterior ao da leitura atual
-  float flagged;
+  float flagged; //possivel valor de reacao
   bool flinch = 0;
   do{
     last = UPDATEpressaoFilamento();
@@ -149,6 +152,14 @@ float collectData(){
 
 
 void loop() {
+  lcd.setCursor(0, 1);
+  lcd.print("Select option:");
+  lcd.print("Capture data >");
+
+  while(Rbutton || OKbutton != HIGH){
+    // does nothing
+  }
+  
   INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////check for &&&&%%%%%
   
   delay(100000);
