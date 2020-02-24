@@ -51,7 +51,15 @@ char password[] = "8164886752";
 WiFiClient client;  
 MySQL_Connection conn((Client *)&client);
 
+//Endereco do LCD (via I2C) eh definida por 0x27 e o display possui tamanho de 16x2
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+//Definicao de pinos para os botoes
+const int Lbutton = 5;
+const int Rbutton = 6;
+const int Cancelbutton = 7;
+const int OKbutton = 8;
+int buttonpressed = -1;
 
 void connectNetwork(){
   //inicializacao do WifiManager e seus ajustes
@@ -96,6 +104,11 @@ template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, 
 void setup() {
   //Configuração da velocidade de escrita/leitura na saida serial (USB)
   Serial.begin(115200);
+
+  //Inicializa display
+  lcd.begin();
+  lcd.backlight();
+  lcd.print("Initializing...");
 
   connectNetwork();
   connectDatabase();
@@ -156,18 +169,83 @@ float collectData(){
   return flagged;
 }
 
+int buttonReader(){
+  while(1){
+    if(Rbutton == HIGH) return Rbutton;
+    if(Lbutton == HIGH) return Lbutton;
+    if(Cancelbutton == HIGH) return Cancelbutton;
+    if(OKbutton == HIGH) return OKbutton;
+  }
+}
 
+void aboutScreen(){
+  while(1){
+    lcd.clear();
+    lcd.print("Select option:");
+    lcd.setCursor(0, 1);
+    lcd.print("< about");  
+  
+    while(1){
+      buttonpressed = buttonReader();
+      if(buttonpressed = Lbutton) return;
+      if(buttonpressed = OKbutton){
+        buttonpressed = -1;
+        lcd.clear();
+        lcd.print("Developed by");
+        lcd.setCursor(0, 1);
+        lcd.print("Joao Marcos");  
+        delay(5000); //aguarda 5 segundos
+        break;
+      }
+    }
+  }
+}
 
+void uploadDataScreen(){
+  while(1){
+    lcd.clear();
+    lcd.print("Select option:");
+    lcd.setCursor(0, 1);
+    lcd.print("< UPLOAD Data >");
+  
+    while(1){
+      buttonpressed = buttonReader();
+      if(buttonpressed == Lbutton) return;
+      if(buttonpressed == Rbutton){
+        buttonpressed = -1;
+        aboutScreen();
+        break;
+      }
+      if(buttonpressed == OKbutton){
+        buttonpressed = -1;
+        //////////////////////////////////////////////
+      }
+    }
+  }
+}
 
+void rodentSelector(){
+  
+}
 
 void loop() {
-  lcd.setCursor(0, 0);
+  lcd.clear();
   lcd.print("Select option:");
   lcd.setCursor(0, 1);
   lcd.print("Capture data >");
 
   while(1){
-    //if(Rbutton
+    buttonpressed = buttonReader();
+    if(buttonpressed == Rbutton){
+      buttonpressed = -1;
+      uploadDataScreen();
+      break;
+    }
+    if(buttonpressed == OKbutton){
+      buttonpressed = -1;
+      rodentSelector();
+      break;
+    }
   }
   
   INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////check for &&&&%%%%%
