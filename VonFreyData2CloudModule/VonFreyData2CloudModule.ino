@@ -17,8 +17,9 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
-//Display
-#include <LiquidCrystal.h>
+//Biblioteca para uso do Display
+#include <Wire.h> //Para uso do protocolo I2C
+#include <LiquidCrystal_I2C.h>
 
 //Bibliotecas e ajustes do MySQL:
 #include <MySQL_Connection.h>
@@ -49,6 +50,8 @@ char password[] = "8164886752";
 
 WiFiClient client;  
 MySQL_Connection conn((Client *)&client);
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void connectNetwork(){
   //inicializacao do WifiManager e seus ajustes
@@ -120,6 +123,12 @@ void setup() {
 
   //Preenche query com NULL
   memset(query, '\0', sizeof query); 
+
+  lcd.setCursor(0,0);
+  lcd.print("SYSTEM IS READY");
+  lcd.setCursor(0,1);
+  lcd.print("TO GET STARTED");
+  delay(3000);
 }
 
 
@@ -152,12 +161,13 @@ float collectData(){
 
 
 void loop() {
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, 0);
   lcd.print("Select option:");
+  lcd.setCursor(0, 1);
   lcd.print("Capture data >");
 
-  while(Rbutton || OKbutton != HIGH){
-    // does nothing
+  while(1){
+    //if(Rbutton
   }
   
   INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////check for &&&&%%%%%
