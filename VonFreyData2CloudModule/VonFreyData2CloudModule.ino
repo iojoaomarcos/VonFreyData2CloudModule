@@ -12,14 +12,17 @@
  */
 
 //Bibliotecas WIFI:
-#include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
+#include <ESP8266WiFi.h>          
+//https://github.com/esp8266/Arduino
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <WiFiManager.h>          
+//https://github.com/tzapu/WiFiManager
 
 //Biblioteca para uso do Display
 #include <Wire.h> //Para uso do protocolo I2C
-#include <LiquidCrystal_I2C.h>
+#include <LiquidCrystal_I2C.h>  
+//https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library
 
 //Bibliotecas e ajustes do MySQL:
 #include <MySQL_Connection.h>
@@ -60,46 +63,6 @@ const int Rbutton = 6;
 const int Cancelbutton = 7;
 const int OKbutton = 8;
 int buttonpressed = -1;
-
-void connectNetwork(){
-  //inicializacao do WifiManager e seus ajustes
-  WiFiManager wifiManager;
-  wifiManager.autoConnect("VonFreyModule SETUP");
-
-  //O ESP estara preso ate estar conectado, logo apos essa etapa:
-  Serial.println("Conectado com sucesso a rede.");
-}
-
-void connectDatabase(){
-  Serial.println("Agora conectando ao banco de dados...");
-  if(conn.connect(IPsql, 3306, user, password)){
-    Serial.println("... conexao feita com sucesso.");
-  }
-  else{
-    Serial.println("... nao foi possivel conectar :(");
-    Serial.println("Rebooting...");
-    ESP.restart();
-  }
-}
-
-template <typename T, typename U> void INSERTintoDB(char querytemplate[], T d1, U d2){
-  //Objeto do Prompt do banco de dados
-  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-
-  //Preenchendo a query com os valores devidos: se a query nao ter 
-  // argumentos, o coringa "\0" deve ser passado para d1
-  if(d1 = '\0') strcpy(query, INSERT_EXPERIMENTOS);
-  else sprintf(query, querytemplate, d1, d2);
-  
-  //Executando a query
-  cur_mem->execute(query);
-
-  Serial.println("Novos dados foram enviados ao MariaDB.");
-  
-  //Apos sua execucao, limpando o cursor para liberar memoria
-  delete cur_mem;
-  memset(query, '\0', sizeof query); 
-}
 
 void setup() {
   //Configuração da velocidade de escrita/leitura na saida serial (USB)
@@ -142,90 +105,6 @@ void setup() {
   lcd.setCursor(0,1);
   lcd.print("TO GET STARTED");
   delay(3000);
-}
-
-
-float UPDATEpressaoFilamento(){
-  while(Serial.available() == 0){ //Aguarda o recebimento do dado
-  }  
-  pressaoFilamento = Serial.parseFloat();
-  return pressaoFilamento;
-}
-
-float collectData(){
-  float last; //valor anterior ao da leitura atual
-  float flagged; //possivel valor de reacao
-  bool flinch = 0;
-  do{
-    last = UPDATEpressaoFilamento();
-
-    if(pressaoFilamento > last) flagged = pressaoFilamento;
-    if(last <= pressaoFilamento/2){
-       
-    }
-        
-  }while(flinch != 1);
-
-  return flagged;
-}
-
-int buttonReader(){
-  while(1){
-    if(Rbutton == HIGH) return Rbutton;
-    if(Lbutton == HIGH) return Lbutton;
-    if(Cancelbutton == HIGH) return Cancelbutton;
-    if(OKbutton == HIGH) return OKbutton;
-  }
-}
-
-void aboutScreen(){
-  while(1){
-    lcd.clear();
-    lcd.print("Select option:");
-    lcd.setCursor(0, 1);
-    lcd.print("< about");  
-  
-    while(1){
-      buttonpressed = buttonReader();
-      if(buttonpressed = Lbutton) return;
-      if(buttonpressed = OKbutton){
-        buttonpressed = -1;
-        lcd.clear();
-        lcd.print("Developed by");
-        lcd.setCursor(0, 1);
-        lcd.print("Joao Marcos");  
-        delay(5000); //aguarda 5 segundos
-        break;
-      }
-    }
-  }
-}
-
-void uploadDataScreen(){
-  while(1){
-    lcd.clear();
-    lcd.print("Select option:");
-    lcd.setCursor(0, 1);
-    lcd.print("< UPLOAD Data >");
-  
-    while(1){
-      buttonpressed = buttonReader();
-      if(buttonpressed == Lbutton) return;
-      if(buttonpressed == Rbutton){
-        buttonpressed = -1;
-        aboutScreen();
-        break;
-      }
-      if(buttonpressed == OKbutton){
-        buttonpressed = -1;
-        //////////////////////////////////////////////
-      }
-    }
-  }
-}
-
-void rodentSelector(){
-  
 }
 
 void loop() {
