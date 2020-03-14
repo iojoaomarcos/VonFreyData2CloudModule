@@ -44,7 +44,8 @@ int IDExperimento;
  * na variavel pressaoFilamento
  */
 float pressaoFilamento = 0;
-float datacollected[26][5];
+String formattedPressure;
+float datacollected[25][5];
 
 //Dados do SGBD MariaDB
 IPAddress IPsql(157,56,178,227);
@@ -73,6 +74,11 @@ void setup() {
   lcd.backlight();
   lcd.print("Initializing...");
 
+  pinMode(Rbutton, INPUT);
+  pinMode(Lbutton, INPUT);
+  pinMode(Cancelbutton, INPUT);
+  pinMode(OKbutton, INPUT);
+  
   connectNetwork();
   connectDatabase();
 
@@ -114,14 +120,11 @@ void loop() {
   lcd.print("Capture data >");
 
   while(1){
-    buttonpressed = buttonReader();
-    if(buttonpressed == Rbutton){
-      buttonpressed = -1;
+    if(digitalRead(Rbutton) == HIGH){
       uploadDataScreen();
       break;
     }
-    if(buttonpressed == OKbutton){
-      buttonpressed = -1;
+    if(digitalRead(OKbutton) == HIGH){
       rodentSelector();
       break;
     }
