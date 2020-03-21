@@ -45,7 +45,9 @@ int IDExperimento;
  */
 float pressaoFilamento = 0;
 String formattedPressure;
-float datacollected[25][5];
+const int rodentsqtty = 25; //Quantidade de roedores
+const int xpqtty = 5; //Quantidade de experimentos
+float datacollected[rodentsqtty][xpqtty];
 
 //Dados do SGBD MariaDB
 IPAddress IPsql(157,56,178,227);
@@ -63,7 +65,6 @@ const int Lbutton = 5;
 const int Rbutton = 6;
 const int Cancelbutton = 7;
 const int OKbutton = 8;
-int buttonpressed = -1;
 
 void setup() {
   //Configuração da velocidade de escrita/leitura na saida serial (USB)
@@ -105,6 +106,13 @@ void setup() {
 
   //Preenche query com NULL
   memset(query, '\0', sizeof query); 
+
+// inicializando float datacollected[25][5];
+for(int i = 0; i < 25; i++){
+  for(int j = 0; j < 5; j++){
+    datacollected[i][j] = -1;
+  }
+}
 
   lcd.setCursor(0,0);
   lcd.print("SYSTEM IS READY");
