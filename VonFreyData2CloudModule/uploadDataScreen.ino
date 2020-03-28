@@ -12,19 +12,9 @@ void uploadDataScreen(){
         break;
       }
       if(digitalRead(OKbutton) == HIGH){
-        if(datacollected[0][0] == NULL){
-          lcd.clear();
-          lcd.print("There is no");
-          lcd.setCursor(0, 1);
-          lcd.print("data to upload");
-          delay(5000);
-          break;
-        }
-        else{
-          calculateNuploud();
-          break;
-        }
+        calculateNuploud();
+        break;
       }
-    }
-  }
-}
+    } // buttons read
+  } //lcd prints
+} // void uploadDataScreen
