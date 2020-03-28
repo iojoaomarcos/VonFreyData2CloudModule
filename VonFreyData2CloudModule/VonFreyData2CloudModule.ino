@@ -44,7 +44,7 @@ int IDExperimento;
  * na variavel pressaoFilamento
  */
 float pressaoFilamento = 0;
-String formattedPressure;
+String formattedPressure; 
 const int rodentsqtty = 25; //Quantidade de roedores
 const int xpqtty = 5; //Quantidade de experimentos
 float datacollected[rodentsqtty][xpqtty];
