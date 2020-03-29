@@ -3,6 +3,7 @@ void calculateNuploud(){
 
   for(rodent = 0; rodent < (rodentsqtty - 1); rodent++){
     int aux; //auxiliar para ordenacao dos vetores de experimentos
+    float average = 0; //media simples dos resultados obtidos para o roedor n
     float q1; //primeiro quartil
     float median; //mediana (segundo quartil)
     float q3; //terceiro quartil
@@ -25,6 +26,7 @@ void calculateNuploud(){
     // a ser analisado (nao vai fazer o upload se roedor n não foi medido)
     if(empty_space == xpqtty) continue;
 
+//-----------------Ordenando de forma crescente os resultados---------------------//
     for (int atual = 0; atual < (rodent_experimentqtty - 1); atual++)
       /* ordenando o vetor para calculo da mediana e quartis, se o atual e maior
        * que o proximo, estes sao trocados */
@@ -34,7 +36,8 @@ void calculateNuploud(){
           datacollected[rodent][atual] = datacollected[rodent][proximo];
           datacollected[rodent][proximo] = aux;
         }
-
+        
+//----------------------------Calculando a mediana--------------------------------//
     if(rodent_experimentqtty%2 == 0){
       /*Se a quantidade de experimentos feitos for par (sem resto na divisão por 2)
        *a mediana pode ser calculada pelo ponto médio dos dois pontos centrais
@@ -54,21 +57,27 @@ void calculateNuploud(){
       median = datacollected[rodent][empty_space - 1 + center];
     }
 
+//----------------------Calculando o primeiro quartil-------------------------//
     
 
-    
-      
 
-    for(int experiment = 0; experiment < rodent_experimentqtty; experiment++){
-      delay(1000);
-    
+//----------------------Calculando o segundo quartil--------------------------//
+
+
+//-------------------Calculando a media dos resultados obtidos----------------// 
+    for(int i = 0; i < rodent_experimentqtty; i++){
+      average += datacollected[rodent][1 + empty_space + i];    
     }
-  } //for rodents
+    average /= rodent_experimentqtty;
+
+    INSERTintoDB(INSERT_MEDICOES, average, IDExperimento);
+
+    
+  } //for rodents (calculating for each rodent
+
+  lcd.clear();
+  lcd.print("UPLOAD COMPLETED");
+  lcd.setCursor(0, 1);
+  lcd.print("NOW REBOOTING...");
+  ESP.restart();
 } //void calculateNuploud
-
-/*
-  const int rodentsqtty = 25; //Quantidade de roedores
-const int xpqtty = 5; //Quantidade de experimentos
-float datacollected[rodentsqtty][xpqtty];
-
-*/ 

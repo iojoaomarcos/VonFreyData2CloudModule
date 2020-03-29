@@ -45,8 +45,8 @@ int IDExperimento;
  */
 float pressaoFilamento = 0;
 String formattedPressure; 
-const int rodentsqtty = 25; //Quantidade de roedores
-const int xpqtty = 5; //Quantidade de experimentos
+const int rodentsqtty = 30; //Quantidade de roedores
+const int xpqtty = 15; //Quantidade de experimentos
 float datacollected[rodentsqtty][xpqtty];
 
 //Dados do SGBD MariaDB
@@ -75,11 +75,6 @@ void setup() {
   lcd.backlight();
   lcd.print("Initializing...");
 
-  pinMode(Rbutton, INPUT);
-  pinMode(Lbutton, INPUT);
-  pinMode(Cancelbutton, INPUT);
-  pinMode(OKbutton, INPUT);
-  
   connectNetwork();
   connectDatabase();
 
@@ -107,12 +102,17 @@ void setup() {
   //Preenche query com NULL
   memset(query, '\0', sizeof query); 
 
-// inicializando float datacollected[25][5];
-for(int i = 0; i < 25; i++){
-  for(int j = 0; j < 5; j++){
+// inicializando float datacollected;
+for(int i = 0; i < rodentsqtty; i++){
+  for(int j = 0; j < xpqtty; j++){
     datacollected[i][j] = -1;
   }
 }
+
+  pinMode(Rbutton, INPUT);
+  pinMode(Lbutton, INPUT);
+  pinMode(Cancelbutton, INPUT);
+  pinMode(OKbutton, INPUT);
 
   lcd.setCursor(0,0);
   lcd.print("SYSTEM IS READY");
@@ -137,8 +137,4 @@ void loop() {
       break;
     }
   }
-  
-  INSERTintoDB(INSERT_MEDICOES, 1.50, IDExperimento); //////check for &&&&%%%%%
-  
-  delay(100000);
 }
