@@ -1,3 +1,3 @@
 void dataFormatter(float pressure){
-  formattedPressure = String(pressure, 2);
+  formattedPressure = String(pressure, DEC);
 }

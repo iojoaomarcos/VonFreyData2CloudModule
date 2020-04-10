@@ -21,6 +21,7 @@ void collectData(int rodentNumber, int colunalivre){
       if(digitalRead(OKbutton) == HIGH){
         lcd.clear();
         dataFormatter(flagged); lcd.print(formattedPressure);
+        lcd.setCursor(0, 1);
         lcd.print("Save it?");
         while(!flinch || digitalRead(Cancelbutton) == LOW){
           //fica no aguardo de uma resposta

@@ -27,6 +27,7 @@
 //Bibliotecas e ajustes do MySQL:
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
+//https://github.com/ChuckBell/MySQL_Connector_Arduino
 
 char INSERT_EXPERIMENTOS[] = 
 "INSERT INTO VonFreyDATA.Experimentos (DataSessao, Observacoes) VALUES (CURRENT_DATE(), '')";
