@@ -7,7 +7,9 @@ void collectData(int rodentNumber, int colunalivre){
       UPDATEpressaoFilamento();
   
       if(pressaoFilamento > flagged) flagged = pressaoFilamento;
-      
+
+      //botao esquerdo cancela a coleta de dados e
+      //Botao "X" (cancelbutton) zera o valor 
       if(digitalRead(Lbutton) == HIGH) return;
       if(digitalRead(Cancelbutton) == HIGH) flagged = 0;
       
@@ -36,7 +38,7 @@ void collectData(int rodentNumber, int colunalivre){
   lcd.print("memory...");
 
   datacollected[rodentNumber][colunalivre];
-  delay(2000); //waits 2 secs
+  delay(1000); //waits 1 secs
   
   lcd.clear();
   lcd.print("Saved. Remember");

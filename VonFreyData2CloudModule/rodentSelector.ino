@@ -21,7 +21,7 @@ void rodentSelector(){
           if(datacollected[rodentNum][colunalivre] == -1) experimentTime = colunalivre;
           else if(colunalivre == (xpqtty - 1)) {
             lcd.clear();
-            lcd.print("ERROR 1:");
+            lcd.print("ERR:");
             lcd.setCursor(0, 1);
             lcd.print("No space left :(");
             delay(3000); //aguarda 3 segundos

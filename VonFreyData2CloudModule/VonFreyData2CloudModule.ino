@@ -58,6 +58,9 @@ char password[] = "8164886752";
 WiFiClient client;  
 MySQL_Connection conn((Client *)&client);
 
+//Visando utilizar menos barramentos, o LCD sera conectado via I2C formado por:
+//Pino 1: Funcao SCL (Clock)
+//Pino 2: Funcao SDA (Dados) (pinos default)
 //Endereco do LCD (via I2C) eh definida por 0x27 e o display possui tamanho de 16x2
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -68,7 +71,7 @@ const int Cancelbutton = 7;
 const int OKbutton = 8;
 
 void setup() {
-  //Configuração da velocidade de escrita/leitura na saida serial (USB)
+  //Configuração da velocidade de escrita/leitura serial
   Serial.begin(115200);
 
   //Inicializa display
@@ -100,7 +103,13 @@ void setup() {
   Serial.print("O ID do Experimento = ");
   Serial.println(IDExperimento);
 
-  //Preenche query com NULL
+  lcd.setCursor(0,0);
+  lcd.print("ID of this EXP:");
+  lcd.setCursor(0,1);
+  lcd.print(IDExperimento);
+  delay(5000);
+
+  //Preenche query com NULL, pois esta "suja"
   memset(query, '\0', sizeof query); 
 
 // inicializando float datacollected;
@@ -118,7 +127,7 @@ for(int i = 0; i < rodentsqtty; i++){
   lcd.setCursor(0,0);
   lcd.print("SYSTEM IS READY");
   lcd.setCursor(0,1);
-  lcd.print("TO GET STARTED");
+  lcd.print("TO BEGIN");
   delay(3000);
 }
 
