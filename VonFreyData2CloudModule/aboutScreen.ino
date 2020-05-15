@@ -11,7 +11,7 @@ void aboutScreen(){
         lcd.clear();
         lcd.print("Developed by iojoaomarcos");
         lcd.setCursor(0, 1);
-        lcd.print("iojoaomarcos @ Universidade Sao Francisco // Modulo de IoT para equipamento de Von Frey Eletronico // Projeto de iniciacao cientifica 2019/2020. ");  
+        lcd.print("iojoaomarcos @ Universidade Sao Francisco // Modulo de IoT para equipamento de Von Frey Eletronico // Projeto de iniciacao cientifica 2019/2020. Lista de Projetos de codigo aberto disponivel em: https://iojoaomarcos.blogspot.com/p/ic-vonfrey-open-source.html");  
 
         //<- Permite exibir todo o texto acima no display, movendo o texto para a esquerda <-
         while(digitalRead(OKbutton) == LOW){
