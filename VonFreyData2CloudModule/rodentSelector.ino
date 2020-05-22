@@ -1,6 +1,5 @@
 void rodentSelector(){
     int rodentNum = 1;
-    int experimentTime;
     int colunalivre;
   
     while(1){
@@ -16,15 +15,16 @@ void rodentSelector(){
       if(digitalRead(Cancelbutton) == HIGH) return; //retorna ao menu anterior
       
       if(digitalRead(OKbutton == HIGH)){
-        for(colunalivre = 0; colunalivre < xpqtty; colunalivre++){ 
+        for(colunalivre = 0; colunalivre < xpqtty; colunalivre++){
           //verificando se existe espaco para armazenar mais um experimento
-          if(datacollected[rodentNum][colunalivre] == -1) experimentTime = colunalivre;
+          if(datacollected[rodentNum][colunalivre] == -1) break;
           else if(colunalivre == (xpqtty - 1)) {
             lcd.clear();
             lcd.print("ERR:");
             lcd.setCursor(0, 1);
             lcd.print("No space left :(");
             delay(3000); //aguarda 3 segundos
+            break;
           }
         }
         collectData(rodentNum, colunalivre);
