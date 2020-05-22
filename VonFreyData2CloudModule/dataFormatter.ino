@@ -1,3 +1,4 @@
 void dataFormatter(float pressure){
-  formattedPressure = String(pressure, DEC);
+  //transforma float em string com duas casas decimais de precisao
+  formattedPressure = String(pressure, 2);
 }
